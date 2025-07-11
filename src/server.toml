@@ -1,0 +1,4 @@
+[profile]
+server = "pve-server.invalid"
+user = "easyiac-prov"
+passwd = "easyiac-test"
