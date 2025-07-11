@@ -4,12 +4,13 @@ use clap::{Args, Parser, Subcommand};
 #[command(name = "easyiac")]
 struct Cli {
     #[command(subcommand)]
-    command: HogeCommands,
+    command: IacCommands,
 }
 
 #[derive(Debug, Subcommand)]
-enum HogeCommands {
+enum IacCommands {
     Fuga(FugaArgs),
+    Test,
 }
 
 #[derive(Debug, Args)]
@@ -27,11 +28,14 @@ fn main() {
     let args = Cli::parse();
 
     match args.command {
-        HogeCommands::Fuga(fuga_args) => match fuga_args.command {
+        IacCommands::Fuga(fuga_args) => match fuga_args.command {
             FugaCommands::Piyo => {
                 println!("piyo");
             }
         },
+        IacCommands::Test => {
+            server().unwrap();
+        }
     }
 }
 
