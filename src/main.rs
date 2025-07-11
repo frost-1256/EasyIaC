@@ -10,7 +10,7 @@ struct Cli {
 #[derive(Debug, Subcommand)]
 enum IacCommands {
     Fuga(FugaArgs),
-    Test,
+    Cred(CredArgs),
 }
 
 #[derive(Debug, Args)]
@@ -19,9 +19,21 @@ struct FugaArgs {
     command: FugaCommands,
 }
 
+#[derive(Debug, Args)]
+struct CredArgs {
+    #[command(subcommand)]
+    command: CredCommands,
+}
+
 #[derive(Debug, Subcommand)]
 enum FugaCommands {
     Piyo,
+}
+
+//noinspection RsEnumVariantNaming
+#[derive(Debug, Subcommand)]
+enum CredCommands {
+    check,
 }
 
 fn main() {
@@ -33,8 +45,11 @@ fn main() {
                 println!("piyo");
             }
         },
-        IacCommands::Test => {
-            server().unwrap();
+        IacCommands::Cred(cred_args) => match cred_args.command {
+            CredCommands::check => {
+                println!("ProxmoxVE Server credentials");
+                server().unwrap();
+            }
         }
     }
 }
@@ -43,7 +58,7 @@ fn main() {
 
 fn server() -> Result<(), Box<dyn std::error::Error>> {
     // server.toml を読み込む
-    let config = config::Config::load_from_file("server.toml")?;
+    let config = config::Config::credentials_from_file("server.toml")?;
 
     // 値を表示
     println!("Server: {}", config.profile.server);
